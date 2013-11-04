@@ -46,6 +46,16 @@ public abstract class LibraryHolding {
 	}
 	
 	/**
+	 * Not sure of a better way to do this
+	 * Obtain the holding ID of the item
+	 * @return the holding ID of the item
+	 * 
+	 */
+	public int getHoldingId(){
+		return HoldingId;
+	}
+	
+	/**
 	 * Gets the due date for this LibraryHolding.
 	 * Requires that the book is checked out.
 	 * @return due date.

@@ -49,8 +49,6 @@ public class User {
 	 * the user.
 	 */
 	public void addToList( LibraryHolding item ) {
-		// TODO: Should the method do something more?
-		// TODO: Should the method throw an exception in some cases?
 		itemList.add( item );
 	}
 	
@@ -60,9 +58,18 @@ public class User {
 	 * @return true if the item is in the list and false otherwise
 	 */
 	public boolean hasItem( LibraryHolding item ) {
-		// TODO: Is this check sufficient? Can we run into problems?
-		// Think about how the contains( ) method works.
-		return itemList.contains( item );
+		
+		boolean trulyHasItem = false;
+		int i;
+		
+		for(i = 0; i < itemList.size(); i++){
+			if(itemList.get(i) == item){
+				trulyHasItem = true;
+				break;
+			}
+		}
+		
+		return trulyHasItem;
 	}
 	
 	/**
@@ -73,11 +80,11 @@ public class User {
 	 * @return true if the item was correctly returned, false otherwise.
 	 */
 	public boolean processReturn( LibraryHolding item ) {
-		// TODO: Implement this method.
-		// The item should be removed from the user's list if its
-		// status is no longer HoldingStatus.CheckedOut.
-		// If its status is different then appropriate action must be
-		// taken, including possibly changing the item's status.
-		return false;
+		if(item.getStatus() != HoldingStatus.CheckedOut){
+			itemList.remove( item );
+			return true;
+		}
+		
+		else return false;
 	}
 }

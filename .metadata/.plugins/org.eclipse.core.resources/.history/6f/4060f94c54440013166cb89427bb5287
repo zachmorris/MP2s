@@ -1,0 +1,23 @@
+package bibliothek210;
+
+public class DVD extends LibraryHolding {
+
+	@Override
+	public int getCheckoutDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getStringRepresentation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String holdingType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

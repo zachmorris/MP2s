@@ -1,0 +1,273 @@
+package bibliothek210;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * 
+ * @author Sathish Gopalakrishnan
+ * 
+ * The Library class represents a library,
+ * with a collection of items and users.
+ * 
+ * The class includes methods for processing checkouts and returns
+ * and other basic operations.
+ *
+ */
+
+public class Library {
+	
+	// the list of items in the library
+	private List<LibraryHolding> libraryItems;
+	
+	// the list of users
+	private List<User> users;
+	
+	/**
+	 * Default constructor that creates empty item and user lists.
+	 */
+	public Library( ) {
+		libraryItems = new ArrayList<LibraryHolding>();
+		users = new ArrayList<User>();
+	}
+	
+	/**
+	 * Obtain the number of users.
+	 * 
+	 * @return the number of users in the library system.
+	 */
+	public int getUserCount() {
+		return users.size();
+	}
+	
+	/**
+	 * Obtain the number of items in the library.
+	 * 
+	 * @return the number of items in the library system.
+	 */
+	public int getItemCount() {
+		return libraryItems.size();
+	}
+
+	/**
+	 * Add a new user to the list of users.
+	 * 
+	 * @param user to add to the library user list
+	 */
+	public void addUser( User user ) {
+		// TODO: More needed?
+		
+		//if a user is already in the list, don't add em
+		if (isUser( user ) == false)
+			users.add( user );
+	}
+	
+	/**
+	 * Checks if a user is part of this library system
+	 * @param user to be tested for
+	 * @return true of the user is part of the library's user list,
+	 * otherwise return false
+	 */
+	public boolean isUser( User user ) {
+		// TODO: More needed? Is this check sufficient? Can we run into problems?
+		// Think about how the contains( ) method works.
+
+		// Using the == method (rather than the contains() method) means that
+		// we are comparing the addresses of the argument user and the users in 
+		// the users list. Equals could get confused if there was a clone, I think.
+		boolean trulyUser = false;
+		int i;
+		
+		for(i = 0; i < getUserCount(); i++){
+			if(users.get(i) == user){
+				trulyUser = true;
+				break;
+			}
+		}
+		
+		return trulyUser;
+	}
+	
+	/**
+	 * Remove a user from the library's user list
+	 * 
+	 * @param user to be removed
+	 */
+	public void removeUser( User user ) {
+		//only remove Joey if Joey is in the list (can't remove
+		//non-existent user)
+		if (isUser(user)==true)
+			users.remove( user );
+	}
+	
+	/**
+	 * Add an item to the library's collection
+	 * 
+	 * @param item to be added
+	 */
+	public void addItem( LibraryHolding item ) {
+		// TODO: More needed?
+		
+		//same thing as with addUser
+		libraryItems.add( item );
+	}
+	
+	/**
+	 * Return the number of items that have been checked out
+	 * @return number of checked out items
+	 */
+	public int getCheckedoutCount( ) {
+		// TODO: implement this
+		
+		//could have a loop or something that checks the status of every 
+		//item in the library
+		int checkedoutCount = 0;
+		int i;
+		
+		for(i=0; i < getItemCount(); i++){
+			if(libraryItems.get(i).getStatus() == HoldingStatus.CheckedOut)
+				checkedoutCount++;
+		}
+
+		return checkedoutCount;
+	}
+	
+	/**
+	 * 
+	 * @param contentType is a string that represents the item type
+	 * @return the number of library items that match the content type
+	 */
+	public int getContentTypeCount( String contentType ) {
+		// TODO: implement this based on holding type
+		
+		//for loop mofuckas
+		
+		int contentCount = 0;
+		int i;
+		
+		for( i = 0; i < getItemCount(); i++){
+			if(libraryItems.get(i).holdingType() == contentType){
+				contentCount ++;
+			}
+		}
+		return contentCount;
+	}
+	
+	/**
+	 * Process an item checkout
+	 * 
+	 * @param item being checked out
+	 * @param user who is checking the item out
+	 * @return true if the checkout succeeded, false otherwise.
+	 * If the checkout is successful then the state of the item 
+	 * changes to CheckedOut and the user is added to the item
+	 * as its current holder. Similarly the item is added to the 
+	 * list of items in the user's possession.
+	 */
+	public boolean checkout( LibraryHolding item, User user ) {
+		// should we do more here?
+		// Is the item part of the library's collection at all?
+		
+		//he means what if someone tries to checkout a book that's 
+		//not part of the library
+		if (libraryItems.contains(item) == false)
+			addItem( item ); 
+		if ( item.checkOut( user ) ) {
+			user.addToList( item );
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	/**
+	 * Process an item checkout given the item's ID and the user's ID
+	 * TODO: write a more detailed spec
+	 * @param holdingID
+	 * @param userID
+	 * @return
+	 * 
+	 * Zach's spec :) 
+	 * @param item being checked out
+	 * @param user who is checking the item out
+	 * @return true if the checkout succeeded, false otherwise.
+	 * If the checkout is successful then the state of the item 
+	 * changes to CheckedOut and the user is added to the item
+	 * as its current holder. Similarly the item is added to the 
+	 * list of items in the user's possession.
+	 */
+	public boolean checkout( int holdingID, int userID ) {
+		// TODO: implement this method
+		// This is to illustrate overloading.
+		// Is it better to use actual object references or use IDs for
+		// such transactions?
+		
+		//can we checkout a book directly with ids
+		//or do we need to change to items and users?
+		//how do we change to items and users?
+		//is there a different way to do it?
+		
+		int i, j;
+		
+		
+		for(i = 0; i < getUserCount(); i++){
+			if(users.get(i).getUserId() == userID){
+				for(j = 0; j < getItemCount(); j++){
+					if(libraryItems.get(j).getHoldingID() == holdingID){
+						checkout(libraryItems.get(j), users.get(i));
+						return true;
+					}
+				}
+			}
+		}
+		System.out.println("blah blah blah");
+		return false;
+	}
+	
+	/**
+	 * TODO: write a good spec for this method
+	 * 
+	 * Process an item return given only the item
+	 * @param item being returned
+	 * @return true if item is returned and removed from user list
+	 * successfully, false otherwise.
+	 */
+	public boolean processReturn( LibraryHolding item ) {
+		// TODO: implement this
+		
+		User user = item.getCurrentUser();
+		// okay
+		
+		//I don't think this is going to work
+		
+		//...uh what, it worked? D:
+		if ( item.processReturn() ) {
+			user.processReturn( item );
+			return true;
+		}
+		else
+			return false;
+		
+	}
+	
+	/**
+	 * Process an item's return given the item's ID
+	 * TODO: write a more detailed spec
+	 * @param holdingID
+	 * @param userID
+	 * @return
+	 */
+	public boolean processReturn( int holdingID ) {
+		// TODO: implement this method
+		int j;
+		
+		for(j = 0; j < getItemCount(); j++){
+			if(libraryItems.get(j).getHoldingID() == holdingID){
+				return(processReturn(libraryItems.get(j)));
+			}
+		}
+		return false;
+		
+	}
+
+}

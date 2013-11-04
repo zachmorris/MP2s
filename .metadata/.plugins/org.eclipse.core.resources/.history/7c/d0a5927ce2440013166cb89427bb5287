@@ -1,0 +1,232 @@
+package bibliothek210;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * 
+ * @author Sathish Gopalakrishnan
+ * 
+ * The Library class represents a library,
+ * with a collection of items and users.
+ * 
+ * The class includes methods for processing checkouts and returns
+ * and other basic operations.
+ *
+ */
+
+public class Library {
+	
+	// the list of items in the library
+	private List<LibraryHolding> libraryItems;
+	
+	// the list of users
+	private List<User> users;
+	
+	/**
+	 * Default constructor that creates empty item and user lists.
+	 */
+	public Library( ) {
+		libraryItems = new ArrayList<LibraryHolding>();
+		users = new ArrayList<User>();
+	}
+	
+	/**
+	 * Obtain the number of users.
+	 * 
+	 * @return the number of users in the library system.
+	 */
+	public int getUserCount() {
+		return users.size();
+	}
+	
+	/**
+	 * Obtain the number of items in the library.
+	 * 
+	 * @return the number of items in the library system.
+	 */
+	public int getItemCount() {
+		return libraryItems.size();
+	}
+
+	/**
+	 * Add a new user to the list of users.
+	 * 
+	 * @param user to add to the library user list
+	 *  Will not add user if user is already on the list
+	 */
+	public void addUser( User user ) {
+		
+		if (isUser( user ) == false)
+			users.add( user );
+	}
+	
+	/**
+	 * Checks if a user is part of this library system
+	 * @param user to be tested for
+	 * @return true of the user is part of the library's user list,
+	 * otherwise return false
+	 */
+	public boolean isUser( User user ) {
+	
+		boolean trulyUser = false;
+		int i;
+		
+		for(i = 0; i < getUserCount(); i++){
+			if(users.get(i) == user){
+				trulyUser = true;
+				break;
+			}
+		}
+		
+		return trulyUser;
+	}
+	
+	/**
+	 * Remove a user from the library's user list
+	 * 
+	 * @param user to be removed
+	 *  Only removes users who are on the user list
+	 */
+	public void removeUser( User user ) {
+		
+		if (isUser(user)==true)
+			users.remove( user );
+	}
+	
+	/**
+	 * Add an item to the library's collection
+	 * 
+	 * @param item to be added
+	 */
+	public void addItem( LibraryHolding item ) {
+		// TODO: More needed?
+		
+		//same thing as with addUser
+		libraryItems.add( item );
+	}
+	
+	/**
+	 * Return the number of items that have been checked out
+	 * @return number of checked out items
+	 */
+	public int getCheckedoutCount( ) {
+				
+		int checkedoutCount = 0;
+		int i;
+		
+		for(i=0; i < getItemCount(); i++){
+			if(libraryItems.get(i).getStatus() == HoldingStatus.CheckedOut)
+				checkedoutCount++;
+		}
+
+		return checkedoutCount;
+	}
+	
+	/**
+	 * 
+	 * @param contentType is a string that represents the item type
+	 * @return the number of library items that match the content type
+	 */
+	public int getContentTypeCount( String contentType ) {
+				
+		int contentCount = 0;
+		int i;
+		
+		for( i = 0; i < getItemCount(); i++){
+			if(libraryItems.get(i).holdingType() == contentType){
+				contentCount ++;
+			}
+		}
+		return contentCount;
+	}
+	
+	/**
+	 * Process an item checkout
+	 * 
+	 * @param item being checked out
+	 * @param user who is checking the item out
+	 * @return true if the checkout succeeded, false otherwise.
+	 * If the checkout is successful then the state of the item 
+	 * changes to CheckedOut and the user is added to the item
+	 * as its current holder. Similarly the item is added to the 
+	 * list of items in the user's possession.
+	 */
+	public boolean checkout( LibraryHolding item, User user ) {
+	
+		if (libraryItems.contains( item ) == false)
+			addItem( item ); 
+		if ( item.checkOut( user ) ) {
+			user.addToList( item );
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	/**
+	 * Process an item checkout given the item's ID and the user's ID
+	 * @param ID of the item being checked out
+	 * @param ID of the user who is checking the item out
+	 * @return true if the checkout succeeded, false otherwise.
+	 * If the checkout is successful then the state of the item 
+	 * changes to CheckedOut and the user is added to the item
+	 * as its current holder. Similarly the item is added to the 
+	 * list of items in the user's possession.
+	 */
+	public boolean checkout( int holdingID, int userID ) {
+			
+		int i, j;
+		
+		for(i=0; i < users.size(); i++){
+			if(users.get(i).getUserId() == userID)
+				break;
+		}
+		
+		for(j = 0; j < libraryItems.size(); j++){
+			if(libraryItems.get(j).getHoldingId() == holdingID)
+				break;
+		}
+	
+		return checkout(libraryItems.get(j), users.get(i));
+	}
+	
+	/**
+	 * TODO: write a good spec for this method
+	 * 
+	 * Process an item return given only the item
+	 * @param item being returned
+	 * @return true if item is returned and removed from user list
+	 * successfully, false otherwise.
+	 */
+	public boolean processReturn( LibraryHolding item ) {
+		
+		User user = item.getCurrentUser();
+		
+		if ( item.processReturn() ) {
+			user.processReturn( item );
+			return true;
+		}
+		else
+			return false;
+		
+	}
+	
+	/**
+	 * Process an item's return given the item's ID
+	 * TODO: write a more detailed spec
+	 * @param holdingID of the item being returned 
+	 * @return true if the item is returned and removed from user list 
+	 * successfully, false if unsuccessful
+	 */
+	public boolean processReturn( int holdingID ) {
+		int j;
+		
+		for(j = 0; j < libraryItems.size(); j++){
+			if(libraryItems.get(j).getHoldingId() == holdingID)
+				break;
+		}
+		return processReturn(libraryItems.get(j));
+	}
+
+}

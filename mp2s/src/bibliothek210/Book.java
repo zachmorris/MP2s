@@ -3,9 +3,9 @@ package bibliothek210;
 /**
  * 
  * @author Sathish Gopalakrishnan
- *
+ *	
  */
-//Yeezy taught me
+
 public class Book extends LibraryHolding {
 	
 	private String title;

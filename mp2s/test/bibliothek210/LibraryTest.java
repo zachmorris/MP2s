@@ -12,9 +12,10 @@ public class LibraryTest {
 		User u2 = new User("U2");
 		lib.addUser( u1 );
 		lib.addUser( u2 );	
+		
 		assertEquals( 2, lib.getUserCount() );
 	}
-	
+		
 	@Test
 	public void testCheckedoutCount( ) {
 		Library lib = new Library( );
@@ -32,10 +33,9 @@ public class LibraryTest {
 	
 	@Test
 	public void testContentTypeCount1( ) {
-		
+		Library lib = new Library( );
 		Book b1 = new Book ( "Book 1", "Author 1" );
 		Book b2 = new Book ( "Book 2", "Author 2" );
-		Library lib = new Library( );
 		lib.addItem( b1 );
 		lib.addItem( b2 );
 		
@@ -48,21 +48,27 @@ public class LibraryTest {
 	public void testContentTypeCount2( ) {
 		
 		Library lib = new Library( );
-		// TODO: add more here
+		
+		
+		DVD d1 = new DVD ( "DVD 1", "Director 1" );
+		DVD d2 = new DVD ( "DVD 2", "Director 2" );
+		DVD d3 = new DVD ( "DVD 3", "Director 3" );
+		
+		lib.addItem( d1 );
+		lib.addItem( d2 );
+		lib.addItem( d3 );
+		
 		
 		int n = lib.getContentTypeCount( "DVD" );
-		// for this test, you must create a new class, DVD, that extends
-		// LibraryHolding, and add objects of that class to the library.
-		// See "Book.java" for a starting point
-		
+			
 		assertEquals( 3, n );		
 	}
 	
 	
 	@Test
 	public void testAddDuplicateUser( ) {
-		User u = new User( "Test User" );
 		Library lib = new Library( );
+		User u = new User( "Test User" );
 		lib.addUser( u );
 		lib.addUser( u );
 		lib.removeUser( u );
@@ -78,15 +84,22 @@ public class LibraryTest {
 		lib.addItem( b );
 		lib.addUser( u );
 		lib.checkout( b, u );
+		
 		assertEquals( true, lib.processReturn(b) );
 	}
 	
 	@Test
 	public void testCheckoutAndReturnWithID( ) {
 		Library lib = new Library( );
-		int b = 10, u = 10; // arbitrary ids. should be re-written
-		lib.checkout(10, 10);
-		assertEquals( true, lib.processReturn(b) );
+		
+		User u = new User( "Test User" );
+		Book b = new Book ( "Grapes of Wrath", "John Steinbeck" );
+		lib.addItem( b );
+		lib.addUser( u );
+		
+		lib.checkout( 8, 6 );
+		
+		assertEquals( true, lib.processReturn(8) );
 	}
 	
 }
